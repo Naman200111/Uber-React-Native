@@ -37,7 +37,6 @@ const Welcome = () => {
         currentIndex = {currentIndex}
         title = {isLastPage ? `Get Started` : `Next`}
         onPress = {() => isLastPage ? router.replace("/(auth)/sign-up") : swiperRef.current?.scrollBy(1)}
-        style={styles.welcomeNavigationBtn}
       />
     </SafeAreaView>
   )
@@ -71,12 +70,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: '100%',
     height: 300,
-  },
-  welcomeNavigationBtn: {
-    padding: 18,
-    backgroundColor: "#0286FF",
-    margin: 40,
-    borderRadius: 100,
   },
   onboardingTitle: {
     fontSize: 28,
