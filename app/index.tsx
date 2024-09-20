@@ -1,9 +1,12 @@
 import { Redirect } from 'expo-router';
+import { useAuth } from '@clerk/clerk-expo';
 
 export default function HomeScreen() {
-  return (
-    <Redirect href="/(auth)/welcome" />
-  );
-}
+  const { isSignedIn } = useAuth();
 
-// const styles = StyleSheet.create({});
+  if (isSignedIn) {
+    return <Redirect href="/(root)/(tabs)/home" />
+  }
+
+  return <Redirect href="/(auth)/welcome" />
+};

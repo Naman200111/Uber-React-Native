@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, TextInput } from 'react-native'
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
 import { images } from '@/constants';
 import { ReactNativeModal } from 'react-native-modal';
 import { useState } from 'react';
@@ -7,16 +7,62 @@ import { icons } from '@/constants';
 import React from 'react'
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
+import { useSignUp } from '@clerk/clerk-expo';
 
 const SignUp = () => {
+  const { isLoaded, signUp, setActive } = useSignUp();
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
   });
   const [successSignUpModal, setSuccessSignUpModal] = useState(false);
-  const [verificationSignUpModal, setVerificationSignUpModal] = useState(false);
+  const [pendingVerificationModal, setPendingVerificationModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState<any>();
+
+  const onSignUpPress = async () => {
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      await signUp.create({
+        emailAddress: form.email,
+        password: form.password,
+      })
+
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+
+      setPendingVerificationModal(true);
+    } catch (err: any) {
+      // Alert.alert({
+      //   title: 'error',
+      // });
+      console.error(JSON.stringify(err, null, 2))
+    }
+  }
+
+  const onPressVerify = async () => {
+    if (!isLoaded) {
+      return
+    }
+    // router.replace("/(root)(tabs)/home")
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code: verificationCode,
+      })
+
+      if (completeSignUp.status === 'complete') {
+        await setActive({ session: completeSignUp.createdSessionId });
+        router.replace("/(root)/(tabs)/home");
+      } else {
+        console.error(JSON.stringify(completeSignUp, null, 2))
+      }
+    } catch (err: any) {
+      // Alert.alert({message: 'error'});
+      console.error(JSON.stringify(err, null, 2))
+    }
+  }
 
   return (
     <ScrollView style={{backgroundColor: "white"}}>
@@ -57,7 +103,8 @@ const SignUp = () => {
         </View>
         <CustomButton 
           title = "Sign Up"
-          onPress = {() => setVerificationSignUpModal(true)}
+          onPress = {onSignUpPress}
+          // onPress = {() => setPendingVerificationModal(true)}
           textStyle={{color: "#FFFFFF"}}
           cusBtnStyle={{
             backgroundColor: "#0286FF",
@@ -66,7 +113,7 @@ const SignUp = () => {
           }}
         />
         {/* incomplete modal */}
-        <ReactNativeModal isVisible={verificationSignUpModal} style={{backgroundColor: "white", maxHeight: 300, borderRadius: 20, margin: "auto", padding: 25, width: "90%"}}>
+        <ReactNativeModal isVisible={pendingVerificationModal} style={{backgroundColor: "white", maxHeight: 300, borderRadius: 20, margin: "auto", padding: 25, width: "90%"}}>
           <View style={{marginBottom: 30}}>
             <Text style={{fontWeight: "700", fontSize: 24, marginBottom: 5, marginTop: 20}}>Verification</Text>
             <Text>We've sent you a verification code on: {form.email}</Text>
@@ -79,13 +126,14 @@ const SignUp = () => {
               value={verificationCode}
               onChange={(code: any) => setVerificationCode(code)}
             />
-            <CustomButton 
+            <CustomButton
               title = "Verify Email"
-              onPress = {() => router.replace("/(root)/home")}
+              onPress = {() => onPressVerify()}
+              // onPress = {() => router.replace("/(root)/home")}
               textStyle={{color: "#FFFFFF", fontWeight: "700", fontSize: 17}}
               cusBtnStyle={{
                 backgroundColor: "rgb(20 182 20)",
-                marginTop: 10
+                marginVertical: 10
               }}
             />
           </View>

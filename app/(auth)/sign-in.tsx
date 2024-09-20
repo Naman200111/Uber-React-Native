@@ -1,18 +1,41 @@
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { images } from '@/constants';
-import Modal from 'react-native-modal';
 import { useState } from 'react';
 import InputField from '@/components/InputField';
 import { icons } from '@/constants';
 import React from 'react'
 import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
+import { useSignIn } from '@clerk/clerk-expo'
 
 const SignIn = () => {
+  const { signIn, setActive, isLoaded } = useSignIn();
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
+
+  const onSignInPress = React.useCallback(async () => {
+    if (!isLoaded) {
+      return
+    }
+
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: form.email,
+        password: form.password,
+      })
+
+      if (signInAttempt.status === 'complete') {
+        await setActive({ session: signInAttempt.createdSessionId })
+        router.replace('/(root)/(tabs)/home');
+      } else {
+        console.error(JSON.stringify(signInAttempt, null, 2))
+      }
+    } catch (err: any) {
+      console.error(JSON.stringify(err, null, 2))
+    }
+  }, [isLoaded, form.email, form.password])
 
   return (
     <ScrollView style={{height: '100%', backgroundColor: "white"}}>
@@ -43,7 +66,7 @@ const SignIn = () => {
         </View>
         <CustomButton 
           title = "Sign In"
-          // onPress = {} // verify creds
+          onPress = {onSignInPress}
           textStyle={{color: "#FFFFFF"}}
           cusBtnStyle={{
             backgroundColor: "#0286FF",
