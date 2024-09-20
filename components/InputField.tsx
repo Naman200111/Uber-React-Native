@@ -1,18 +1,21 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { useRef } from 'react';
 import React from 'react';
 
 const InputField = (props: any) => {
-	const {icon, placeholder, secureTextEntry, onChange, value} = props;
+	const textRef = useRef<TextInput>(null);
+	const {icon, placeholder, secureTextEntry=false, onChange, value} = props;
   return (
 		<KeyboardAvoidingView style={styles.inputFieldBox}>
-			<TouchableWithoutFeedback >
+			<TouchableWithoutFeedback onPress={() => textRef.current?.focus()}>
 				<View style={styles.inputField}>
 					{icon && <Image source={icon} style={{height: 24, width: 24, tintColor: "#ADADAD"}} />}
-					<TextInput 
+					<TextInput
+						ref={textRef}
 						placeholder={placeholder}
 						secureTextEntry={secureTextEntry}
 						value={value}
-						onChange={onChange}
+						onChangeText={onChange}
 						placeholderTextColor="#ADADAD"
 					/>
 				</View>

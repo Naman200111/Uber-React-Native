@@ -37,6 +37,14 @@ const Welcome = () => {
         currentIndex = {currentIndex}
         title = {isLastPage ? `Get Started` : `Next`}
         onPress = {() => isLastPage ? router.replace("/(auth)/sign-up") : swiperRef.current?.scrollBy(1)}
+        cusBtnStyle={{
+          backgroundColor: "#0286FF",
+          margin: 10,
+          marginHorizontal: 20,
+        }}
+        textStyle={{
+          color: "#FFFFFF"
+        }}
       />
     </SafeAreaView>
   )

@@ -44,6 +44,12 @@ const SignIn = () => {
         <CustomButton 
           title = "Sign In"
           // onPress = {} // verify creds
+          textStyle={{color: "#FFFFFF"}}
+          cusBtnStyle={{
+            backgroundColor: "#0286FF",
+            margin: 10,
+            marginHorizontal: 20,
+          }}
         />
         <View style={{display: 'flex', flexDirection: 'row', padding: 10, alignItems: "center", gap: 10, justifyContent: "center"}}>
           <View style={{height: 1, backgroundColor: "#CED1DD", width: "35%"}} />
@@ -53,11 +59,12 @@ const SignIn = () => {
         <CustomButton 
           title = "Log In With Google"
           lefticon = {icons.google}
-          
+          cusBtnStyle={{backgroundColor: "#FFFFFF", borderColor: "#EBEBEB", borderWidth: 1, margin: 10, marginHorizontal: 20}}
+          textStyle={{color: "#333333"}}
         />
-        <View style={{display:"flex", flexDirection: "row", justifyContent: "center", gap: 10, margin: 30}}>
-          <Text>Don't have an account?</Text>
-          <Text onPress={() => router.replace("/(auth)/sign-up")} style={{color: "#0286FF", fontWeight: "700"}}>Sign Up</Text>
+        <View style={{display:"flex", flexDirection: "row", justifyContent: "center", gap: 5, margin: 30, alignItems: "center"}}>
+          <Text style={{fontSize: 17, color: "#858585"}}>Don't have an account?</Text>
+          <Text onPress={() => router.replace("/(auth)/sign-up")} style={{color: "#0286FF", fontWeight: "700", fontSize: 17}}>Sign Up</Text>
         </View>
       </View>
     </ScrollView>

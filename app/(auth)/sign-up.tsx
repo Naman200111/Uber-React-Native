@@ -16,6 +16,7 @@ const SignUp = () => {
   });
   const [successSignUpModal, setSuccessSignUpModal] = useState(false);
   const [verificationSignUpModal, setVerificationSignUpModal] = useState(false);
+  const [verificationCode, setVerificationCode] = useState<any>();
 
   return (
     <ScrollView style={{backgroundColor: "white"}}>
@@ -23,7 +24,7 @@ const SignUp = () => {
         <Image style={styles.signUpCar} source={images.signUpCar}/>
         <Text style={{paddingLeft: 25, fontSize: 24, fontWeight: "700"}}>Create your Account</Text>
         <View style={styles.form}>
-          <View style={styles.formItem}>
+          <View>
             <Text style={styles.formItemTitle}>Name</Text>
             <InputField
               icon={icons.profile}
@@ -58,26 +59,52 @@ const SignUp = () => {
           title = "Sign Up"
           onPress = {() => setVerificationSignUpModal(true)}
           textStyle={{color: "#FFFFFF"}}
+          cusBtnStyle={{
+            backgroundColor: "#0286FF",
+            margin: 10,
+            marginHorizontal: 20,
+          }}
         />
         {/* incomplete modal */}
-        {/* <ReactNativeModal isVisible={verificationSignUpModal} style={{backgroundColor: "white", maxHeight: 300, borderRadius: 20, margin: "auto", padding: 25}}>
+        <ReactNativeModal isVisible={verificationSignUpModal} style={{backgroundColor: "white", maxHeight: 300, borderRadius: 20, margin: "auto", padding: 25, width: "90%"}}>
+          <View style={{marginBottom: 30}}>
+            <Text style={{fontWeight: "700", fontSize: 24, marginBottom: 5, marginTop: 20}}>Verification</Text>
+            <Text>We've sent you a verification code on: {form.email}</Text>
+          </View>
           <View style={{display: "flex", justifyContent: "center", gap: 10}}>
-            <Text style={{color: "#333333", fontSize: 18}}>Code </Text>
-            <TextInput style={{backgroundColor: "#F6F8FA", width: "100%", borderRadius: 10, padding: 10, marginTop: 10}} />
+            <Text style={{color: "#333333", fontSize: 18, fontWeight: "500"}}>Code </Text>
+            <InputField
+              icon={icons.lock}
+              placeholder="12345"
+              value={verificationCode}
+              onChange={(code: any) => setVerificationCode(code)}
+            />
             <CustomButton 
-              title = "Verify"
+              title = "Verify Email"
               onPress = {() => router.replace("/(root)/home")}
+              textStyle={{color: "#FFFFFF", fontWeight: "700", fontSize: 17}}
+              cusBtnStyle={{
+                backgroundColor: "rgb(20 182 20)",
+                marginTop: 10
+              }}
             />
           </View>
-        </ReactNativeModal> */}
+        </ReactNativeModal>
         <ReactNativeModal isVisible={successSignUpModal} style={{backgroundColor: "white", maxHeight: 422, borderRadius: 20, margin: "auto", padding: 25}}>
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 20}}>
             <Image style={{height: 110, width: 110}}source={images.check}/>
-            <Text style={{color: "#333333", fontSize: 28}}>Verified!</Text>
+            <Text style={{color: "#333333", fontSize: 28, fontWeight: "600"}}>Verified!</Text>
             <Text style={{color: "#858585", fontSize: 17, alignSelf: "center", textAlign: 'center', maxWidth: "90%"}}>You have successfully verified your account</Text>
             <CustomButton 
               title = "Browse Home"
               onPress = {() => router.replace("/(root)/home")}
+              textStyle={{color: "#FFFFFF", fontWeight: "600"}}
+              cusBtnStyle={{
+                width: "80%",
+                backgroundColor: "#0286FF",
+                margin: 10,
+                marginHorizontal: 20,
+              }}
             />
           </View>
         </ReactNativeModal>
@@ -89,12 +116,12 @@ const SignUp = () => {
         <CustomButton 
           title = "Log In With Google"
           lefticon = {icons.google}
-          style={{backgroundColor: "#FFFFFF"}}
-          textStyle={{color: "#333333"}}
+          cusBtnStyle={{backgroundColor: "#FFFFFF", borderColor: "#EBEBEB", borderWidth: 1, margin: 10, marginHorizontal: 20}}
+          textStyle={{color: "#333333", fontWeight: 600, fontSize: 17}}
         />
-        <View style={{display:"flex", flexDirection: "row", justifyContent: "center", gap: 10, margin: 30}}>
-          <Text>Already have an account?</Text>
-          <Text onPress={() => router.replace("/(auth)/sign-in")} style={{color: "#0286FF", fontWeight: "700"}}>Log In</Text>
+        <View style={{display:"flex", flexDirection: "row", justifyContent: "center", gap: 5, margin: 30, alignItems: "center"}}>
+          <Text style={{fontSize: 17, color: "#858585"}}>Already have an account?</Text>
+          <Text onPress={() => router.replace("/(auth)/sign-in")} style={{color: "#0286FF", fontWeight: "700", fontSize: 17}}>Log In</Text>
         </View>
       </View>
     </ScrollView>
