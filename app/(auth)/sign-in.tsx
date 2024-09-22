@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
 import { images } from '@/constants';
 import { useState } from 'react';
 import InputField from '@/components/InputField';
@@ -29,11 +29,9 @@ const SignIn = () => {
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId })
         router.replace('/(root)/(tabs)/home');
-      } else {
-        console.error(JSON.stringify(signInAttempt, null, 2))
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2))
+      Alert.alert('Issues...', err.errors[0].longMessage);
     }
   }, [isLoaded, form.email, form.password])
 
@@ -82,8 +80,9 @@ const SignIn = () => {
         <CustomButton 
           title = "Log In With Google"
           lefticon = {icons.google}
+          onPress = {() => Alert.alert("Coming soon...", "This option will be available soon.")}
           cusBtnStyle={{backgroundColor: "#FFFFFF", borderColor: "#EBEBEB", borderWidth: 1, margin: 10, marginHorizontal: 20}}
-          textStyle={{color: "#333333"}}
+          textStyle={{color: "#333333", fontWeight: 600, fontSize: 17}}
         />
         <View style={{display:"flex", flexDirection: "row", justifyContent: "center", gap: 5, margin: 30, alignItems: "center"}}>
           <Text style={{fontSize: 17, color: "#858585"}}>Don't have an account?</Text>

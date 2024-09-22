@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
 import { images } from '@/constants';
 import { ReactNativeModal } from 'react-native-modal';
 import { useState } from 'react';
@@ -35,10 +35,7 @@ const SignUp = () => {
 
       setPendingVerificationModal(true);
     } catch (err: any) {
-      // Alert.alert({
-      //   title: 'error',
-      // });
-      console.error(JSON.stringify(err, null, 2))
+      Alert.alert('Issues...', err.errors[0].longMessage);
     }
   }
 
@@ -46,7 +43,6 @@ const SignUp = () => {
     if (!isLoaded) {
       return
     }
-    // router.replace("/(root)(tabs)/home")
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: verificationCode,
@@ -54,13 +50,10 @@ const SignUp = () => {
 
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
-        router.replace("/(root)/(tabs)/home");
-      } else {
-        console.error(JSON.stringify(completeSignUp, null, 2))
+        setSuccessSignUpModal(true);
       }
     } catch (err: any) {
-      // Alert.alert({message: 'error'});
-      console.error(JSON.stringify(err, null, 2))
+      Alert.alert('Error', err.errors[0].longMessage);
     }
   }
 
@@ -104,7 +97,6 @@ const SignUp = () => {
         <CustomButton 
           title = "Sign Up"
           onPress = {onSignUpPress}
-          // onPress = {() => setPendingVerificationModal(true)}
           textStyle={{color: "#FFFFFF"}}
           cusBtnStyle={{
             backgroundColor: "#0286FF",
@@ -112,7 +104,6 @@ const SignUp = () => {
             marginHorizontal: 20,
           }}
         />
-        {/* incomplete modal */}
         <ReactNativeModal isVisible={pendingVerificationModal} style={{backgroundColor: "white", maxHeight: 300, borderRadius: 20, margin: "auto", padding: 25, width: "90%"}}>
           <View style={{marginBottom: 30}}>
             <Text style={{fontWeight: "700", fontSize: 24, marginBottom: 5, marginTop: 20}}>Verification</Text>
@@ -129,7 +120,6 @@ const SignUp = () => {
             <CustomButton
               title = "Verify Email"
               onPress = {() => onPressVerify()}
-              // onPress = {() => router.replace("/(root)/home")}
               textStyle={{color: "#FFFFFF", fontWeight: "700", fontSize: 17}}
               cusBtnStyle={{
                 backgroundColor: "rgb(20 182 20)",
@@ -145,7 +135,7 @@ const SignUp = () => {
             <Text style={{color: "#858585", fontSize: 17, alignSelf: "center", textAlign: 'center', maxWidth: "90%"}}>You have successfully verified your account</Text>
             <CustomButton 
               title = "Browse Home"
-              onPress = {() => router.replace("/(root)/home")}
+              onPress = {() => router.replace("/(root)/(tabs)/home")}
               textStyle={{color: "#FFFFFF", fontWeight: "600"}}
               cusBtnStyle={{
                 width: "80%",
@@ -162,8 +152,9 @@ const SignUp = () => {
           <View style={{height: 1, backgroundColor: "#CED1DD", width: "35%"}} />
         </View>
         <CustomButton 
-          title = "Log In With Google"
+          title = "Sign Up with Google"
           lefticon = {icons.google}
+          onPress = {() => Alert.alert("Coming soon...", "This option will be available soon.")}
           cusBtnStyle={{backgroundColor: "#FFFFFF", borderColor: "#EBEBEB", borderWidth: 1, margin: 10, marginHorizontal: 20}}
           textStyle={{color: "#333333", fontWeight: 600, fontSize: 17}}
         />
